@@ -1301,18 +1301,124 @@
 
 
     
-const SHOPIFY_ACCOUNT_URL =
-  "https://shopify.com/101166711065/account";
 
-document.getElementById("loginForm").addEventListener("submit", function (event) {
-  event.preventDefault();
-  window.location.href = SHOPIFY_ACCOUNT_URL;
-});
+const SHOPIFY_CLIENT_ID = "9700ce5b-7ead-43cb-b2ce-2c6b3b6e3694";
+const SHOPIFY_REDIRECT_URI = "https://genzmode.vercel.app/auth.html";
+const SHOPIFY_AUTH_URL = "https://shopify.com/authentication/101166711065/oauth/authorize";
+const SHOPIFY_TOKEN_URL = "https://shopify.com/authentication/101166711065/oauth/token";
 
-document.getElementById("signupForm").addEventListener("submit", function (event) {
+async function startShopifyLogin(event) {
   event.preventDefault();
-  window.location.href = SHOPIFY_ACCOUNT_URL;
-});
+
+  try {
+    const randomBytes = crypto.getRandomValues(new Uint8Array(32));
+    const verifier = Array.from(randomBytes)
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(verifier)
+    );
+
+    const challenge = btoa(
+      String.fromCharCode(...new Uint8Array(digest))
+    )
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    const state = crypto.randomUUID();
+
+    sessionStorage.setItem("shopify_pkce_verifier", verifier);
+    sessionStorage.setItem("shopify_oauth_state", state);
+
+    const params = new URLSearchParams({
+      client_id: SHOPIFY_CLIENT_ID,
+      response_type: "code",
+      redirect_uri: SHOPIFY_REDIRECT_URI,
+      scope: "openid email customer-account-api:full",
+      state: state,
+      code_challenge: challenge,
+      code_challenge_method: "S256"
+    });
+
+    window.location.href = `${SHOPIFY_AUTH_URL}?${params.toString()}`;
+  } catch (error) {
+    console.error(error);
+    alert("Unable to start login. Please try again.");
+  }
+}
+
+
+
+async function completeShopifyLogin() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const returnedState = params.get("state");
+  const error = params.get("error");
+
+  if (error) {
+    alert("Shopify login cancelled or failed. Please try again.");
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return;
+  }
+
+  if (!code) return;
+
+  const savedState = sessionStorage.getItem("shopify_oauth_state");
+  const verifier = sessionStorage.getItem("shopify_pkce_verifier");
+
+  if (!savedState || returnedState !== savedState || !verifier) {
+    alert("Login session expired. Please try again.");
+    window.location.replace("/auth.html");
+    return;
+  }
+
+  try {
+    const response = await fetch(SHOPIFY_TOKEN_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: SHOPIFY_CLIENT_ID,
+        redirect_uri: SHOPIFY_REDIRECT_URI,
+        code: code,
+        code_verifier: verifier
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.access_token) {
+      throw new Error(data.error_description || data.error || "Token exchange failed");
+    }
+
+    sessionStorage.setItem("genzmodeShopifyAccessToken", data.access_token);
+    sessionStorage.removeItem("shopify_pkce_verifier");
+    sessionStorage.removeItem("shopify_oauth_state");
+
+    window.location.replace("/index.html");
+  } catch (err) {
+    console.error("Shopify authentication error:", err);
+    alert("Login could not be completed. Please check the browser console.");
+  }
+}
+
+completeShopifyLogin();
+
+
+loginForm.querySelector('input[type="password"]')
+  ?.removeAttribute("required");
+
+signupForm.querySelector('input[type="password"]')
+  ?.removeAttribute("required");
+
+loginForm.addEventListener("submit", startShopifyLogin);
+signupForm.addEventListener("submit", startShopifyLogin);
+
 
 
     /* =========================================
