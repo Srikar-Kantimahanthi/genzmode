@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Policies | genzmode</title>
+
+  <!-- GOOGLE FONTS -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Playfair+Display:wght@400;500&display=swap"
+    rel="stylesheet"
+  >
+
+
+  <style>
+
+    /* =========================================
+       GENZMODE COLORS
+    ========================================= */
+
+    :root {
+
+      --deep-truffle: #1b100b;
+
+      --truffle-brown: #24150f;
+
+      --champagne-gold: #e2c387;
+
+      --soft-champagne: #eed8ab;
+
+      --muted-gold: rgba(238, 216, 171, 0.65);
+
+    }
+
+
+    /* =========================================
+       RESET
+    ========================================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+
+      margin: 0;
+
+      background: var(--deep-truffle);
+
+      color: var(--soft-champagne);
+
+      font-family: "DM Sans", sans-serif;
+
+    }
+
+
+    /* =========================================
+       NAVBAR
+    ========================================= */
+
+    .navbar {
+
+      width: 100%;
+
+      height: 76px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      padding: 0 4%;
+
+      background: var(--truffle-brown);
+
+      border-bottom: 1px solid rgba(226, 195, 135, 0.18);
+
+    }
+
+
+    .logo {
+
+      color: var(--champagne-gold);
+
+      text-decoration: none;
+
+      font-family: "Playfair Display", serif;
+
+      font-size: 25px;
+
+      font-weight: 400;
+
+      letter-spacing: 1px;
+
+    }
+
+
+    .nav-right {
+
+      display: flex;
+
+      align-items: center;
+
+    }
+
+
+    .nav-links {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 30px;
+
+    }
+
+
+    .nav-links a {
+
+      color: var(--muted-gold);
+
+      text-decoration: none;
+
+      font-size: 13px;
+
+      font-weight: 500;
+
+      letter-spacing: 1.8px;
+
+      transition: color 0.3s ease;
+
+    }
+
+
+    .nav-links a:hover {
+
+      color: var(--champagne-gold);
+
+    }
+
+
+    .nav-links a:nth-child(3) {
+
+      color: var(--champagne-gold);
+
+    }
+
+
+    /* =========================================
+       POLICIES
+    ========================================= */
+
+    .policies-section {
+
+      min-height: calc(100vh - 76px);
+
+      padding: 80px 8%;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(226, 195, 135, 0.06),
+          transparent 45%
+        );
+
+    }
+
+
+    .policies-container {
+
+      max-width: 900px;
+
+      margin: 0 auto;
+
+    }
+
+
+    .policies-header {
+
+      text-align: center;
+
+      margin-bottom: 65px;
+
+    }
+
+
+    .policies-eyebrow {
+
+      margin: 0 0 20px;
+
+      color: var(--champagne-gold);
+
+      font-size: 10px;
+
+      font-weight: 500;
+
+      letter-spacing: 4px;
+
+      opacity: 0.75;
+
+    }
+
+
+    .policies-header h1 {
+
+      margin: 0;
+
+      font-family: "Playfair Display", serif;
+
+      font-size: clamp(50px, 7vw, 90px);
+
+      font-weight: 400;
+
+      color: var(--champagne-gold);
+
+      line-height: 1;
+
+    }
+
+
+    .policy-line {
+
+      width: 55px;
+
+      height: 1px;
+
+      margin: 28px auto 0;
+
+      background: var(--champagne-gold);
+
+      opacity: 0.6;
+
+    }
+
+
+    /* =========================================
+       POLICY ITEMS
+    ========================================= */
+
+    .policy-item {
+
+      padding: 30px 0;
+
+      border-bottom: 1px solid rgba(226, 195, 135, 0.14);
+
+    }
+
+
+    .policy-item:first-child {
+
+      border-top: 1px solid rgba(226, 195, 135, 0.14);
+
+    }
+
+
+    .policy-item h2 {
+
+      margin: 0 0 14px;
+
+      font-family: "Playfair Display", serif;
+
+      font-size: 24px;
+
+      font-weight: 400;
+
+      color: var(--soft-champagne);
+
+    }
+
+
+    .policy-item p {
+
+      margin: 0;
+
+      color: var(--muted-gold);
+
+      font-size: 13px;
+
+      line-height: 1.9;
+
+      letter-spacing: 0.25px;
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================
+       NAVBAR
+  ========================================= -->
+
+  <nav class="navbar">
+
+    <a
+      href="index.html"
+      class="logo"
+    >
+      genzmode
+    </a>
+
+
+    <div class="nav-right">
+
+      <div class="nav-links">
+
+        <a href="index.html">
+          HOME
+        </a>
+
+        <a href="about.html">
+          ABOUT
+        </a>
+
+        <a href="policies.html">
+          POLICIES
+        </a>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+  <!-- =========================================
+       POLICIES
+  ========================================= -->
+
+  <main>
+
+    <section class="policies-section">
+
+      <div class="policies-container">
+
+
+        <div class="policies-header">
+
+          <p class="policies-eyebrow">
+            GENZMODE
+          </p>
+
+          <h1>
+            Policies
+          </h1>
+
+          <div class="policy-line"></div>
+
+        </div>
+
+
+        <!-- SHIPPING -->
+
+        <div class="policy-item">
+
+          <h2>
+            Shipping
+          </h2>
+
+          <p>
+            Orders are carefully prepared and shipped
+            to the delivery address provided during checkout.
+            Shipping timelines and charges may vary depending
+            on the destination and order.
+          </p>
+
+        </div>
+
+
+        <!-- RETURNS -->
+
+        <div class="policy-item">
+
+          <h2>
+            Returns & Exchanges
+          </h2>
+
+          <p>
+            Eligible items may be returned or exchanged
+            according to the return conditions applicable
+            to the order. Items must meet the required
+            condition and eligibility criteria.
+          </p>
+
+        </div>
+
+
+        <!-- CANCELLATION -->
+
+        <div class="policy-item">
+
+          <h2>
+            Order Cancellation
+          </h2>
+
+          <p>
+            Cancellation requests may be accepted only
+            before an order has been processed or shipped.
+            Once an order enters the shipping process,
+            cancellation may no longer be possible.
+          </p>
+
+        </div>
+
+
+        <!-- PRIVACY -->
+
+        <div class="policy-item">
+
+          <h2>
+            Privacy
+          </h2>
+
+          <p>
+            Information provided while using GENZMODE
+            is handled for purposes such as processing
+            orders, providing services and improving
+            the shopping experience.
+          </p>
+
+        </div>
+
+
+        <!-- CONTACT -->
+
+        <div class="policy-item">
+
+          <h2>
+            Contact
+          </h2>
+
+          <p>
+            For questions regarding orders, returns,
+            shipping or other policies, customers can
+            contact GENZMODE through the official
+            support channel.
+          </p>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+</body>
+
+</html>
