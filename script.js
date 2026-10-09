@@ -4407,3 +4407,54 @@ if (genderSwitch) {
 // =========================================
 
 setGenderView("women");
+
+
+
+// ========================================
+// GENZMODE CUSTOMER AUTH UI
+// ========================================
+
+function updateAccountUI() {
+  const token = sessionStorage.getItem(
+    "genzmodeShopifyAccessToken"
+  );
+
+  const loginButton = document.getElementById(
+    "loginNavButton"
+  );
+
+  const accountButton = document.getElementById(
+    "myAccountButton"
+  );
+
+  const logoutButton = document.getElementById(
+    "logoutButton"
+  );
+
+  if (!loginButton || !accountButton || !logoutButton) {
+    return;
+  }
+
+  const isLoggedIn = Boolean(token);
+
+  loginButton.style.display = isLoggedIn ? "none" : "inline-block";
+  accountButton.style.display = isLoggedIn ? "inline-block" : "none";
+  logoutButton.style.display = isLoggedIn ? "inline-block" : "none";
+}
+
+// My Account button
+document.getElementById("myAccountButton")
+  ?.addEventListener("click", function () {
+    alert("My Account page integration is the next step.");
+  });
+
+// Logout button
+document.getElementById("logoutButton")
+  ?.addEventListener("click", function () {
+    sessionStorage.removeItem("genzmodeShopifyAccessToken");
+    updateAccountUI();
+    window.location.href = "index.html";
+  });
+
+// Update when page loads
+updateAccountUI();
