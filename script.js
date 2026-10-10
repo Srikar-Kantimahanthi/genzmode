@@ -4410,9 +4410,79 @@ setGenderView("women");
 
 
 
-// ========================================
-// GENZMODE CUSTOMER AUTH UI
-// ========================================
+
+/* ========================================
+   GENZMODE CUSTOMER AUTH UI
+======================================== */
+
+const GENZMODE_CLIENT_ID =
+  "9700ce5b-7ead-43cb-b2ce-2c6b3b6e3694";
+
+const GENZMODE_REDIRECT_URI =
+  "https://genzmode.vercel.app/auth.html";
+
+const GENZMODE_AUTH_URL =
+  "https://shopify.com/authentication/101166711065/oauth/authorize";
+
+async function startGenZModeShopifyLogin(event) {
+  event.preventDefault();
+
+  try {
+    // Generate a secure PKCE verifier
+    const randomBytes = crypto.getRandomValues(
+      new Uint8Array(32)
+    );
+
+    const verifier = Array.from(randomBytes)
+      .map(byte => byte.toString(16).padStart(2, "0"))
+      .join("");
+
+    // Create the PKCE challenge
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(verifier)
+    );
+
+    const challenge = btoa(
+      String.fromCharCode(...new Uint8Array(digest))
+    )
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    const state = crypto.randomUUID();
+
+    // Preserve the values for the existing auth.html callback
+    sessionStorage.setItem(
+      "shopify_pkce_verifier",
+      verifier
+    );
+
+    sessionStorage.setItem(
+      "shopify_oauth_state",
+      state
+    );
+
+    const params = new URLSearchParams({
+      client_id: GENZMODE_CLIENT_ID,
+      response_type: "code",
+      redirect_uri: GENZMODE_REDIRECT_URI,
+      scope: "openid email customer-account-api:full",
+      state,
+      code_challenge: challenge,
+      code_challenge_method: "S256"
+    });
+
+    // Go straight to Shopify — no intermediate email form
+    window.location.assign(
+      `${GENZMODE_AUTH_URL}?${params.toString()}`
+    );
+
+  } catch (error) {
+    console.error("Unable to start Shopify login:", error);
+    alert("Unable to start login. Please try again.");
+  }
+}
 
 function updateAccountUI() {
   const token = sessionStorage.getItem(
@@ -4437,18 +4507,27 @@ function updateAccountUI() {
 
   const isLoggedIn = Boolean(token);
 
-  loginButton.style.display = isLoggedIn ? "none" : "inline-block";
-  accountButton.style.display = isLoggedIn ? "inline-block" : "none";
-  logoutButton.style.display = isLoggedIn ? "inline-block" : "none";
+  loginButton.style.display =
+    isLoggedIn ? "none" : "inline-flex";
+
+  accountButton.style.display =
+    isLoggedIn ? "inline-block" : "none";
+
+  logoutButton.style.display =
+    isLoggedIn ? "inline-block" : "none";
 }
 
-// My Account button
+// Intercept the homepage Login link
+document.getElementById("loginNavButton")
+  ?.addEventListener("click", startGenZModeShopifyLogin);
+
+// Keep My Account as a placeholder until the next step
 document.getElementById("myAccountButton")
   ?.addEventListener("click", function () {
-    alert("My Account page integration is the next step.");
+    alert("My Account integration is coming next.");
   });
 
-// Logout button
+// Basic local logout — we'll finish this after login testing
 document.getElementById("logoutButton")
   ?.addEventListener("click", function () {
     sessionStorage.removeItem("genzmodeShopifyAccessToken");
@@ -4456,5 +4535,4 @@ document.getElementById("logoutButton")
     window.location.href = "index.html";
   });
 
-// Update when page loads
 updateAccountUI();
