@@ -4521,12 +4521,21 @@ function updateAccountUI() {
 document.getElementById("loginNavButton")
   ?.addEventListener("click", startGenZModeShopifyLogin);
 
-// Keep My Account as a placeholder until the next step
+
+/* ========================================
+   GENZMODE MY ACCOUNT
+======================================== */
+
+const SHOPIFY_CUSTOMER_ACCOUNT_URL =
+  "https://shopify.com/101166711065/account";
+
 document.getElementById("myAccountButton")
   ?.addEventListener("click", function () {
-    alert("My Account integration is coming next.");
+    window.location.href = SHOPIFY_CUSTOMER_ACCOUNT_URL;
   });
 
+
+  
 // Basic local logout — we'll finish this after login testing
 document.getElementById("logoutButton")
   ?.addEventListener("click", function () {
