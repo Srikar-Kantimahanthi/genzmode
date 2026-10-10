@@ -4535,42 +4535,13 @@ document.getElementById("myAccountButton")
   });
 
 
-
-
-/* ========================================
-   GENZMODE SHOPIFY LOGOUT
-======================================== */
-
-const SHOPIFY_LOGOUT_URL =
-  "https://shopify.com/authentication/101166711065/logout";
-
+  
+// Basic local logout — we'll finish this after login testing
 document.getElementById("logoutButton")
   ?.addEventListener("click", function () {
-    const idToken = sessionStorage.getItem(
-      "genzmodeShopifyIdToken"
-    );
-
-    // Clear GENZMODE's local login state
     sessionStorage.removeItem("genzmodeShopifyAccessToken");
-    sessionStorage.removeItem("genzmodeShopifyIdToken");
-    sessionStorage.removeItem("shopify_pkce_verifier");
-    sessionStorage.removeItem("shopify_oauth_state");
-
     updateAccountUI();
-
-    // If an ID token is available, ask Shopify to end its session
-    if (idToken) {
-      const params = new URLSearchParams({
-        id_token_hint: idToken,
-        post_logout_redirect_uri:
-          "https://genzmode.vercel.app/index.html"
-      });
-
-      window.location.assign(
-        `${SHOPIFY_LOGOUT_URL}?${params.toString()}`
-      );
-    } else {
-      // Fallback: local logout only
-      window.location.assign("/index.html");
-    }
+    window.location.href = "index.html";
   });
+
+updateAccountUI();
