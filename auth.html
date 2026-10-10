@@ -1400,6 +1400,10 @@ async function completeShopifyLogin() {
     sessionStorage.removeItem("shopify_pkce_verifier");
     sessionStorage.removeItem("shopify_oauth_state");
 
+    if (data.id_token) {
+  sessionStorage.setItem("genzmodeShopifyIdToken", data.id_token);
+}
+
     window.location.replace("/index.html");
   } catch (err) {
     console.error("Shopify authentication error:", err);
