@@ -1413,7 +1413,15 @@ async function completeShopifyLogin() {
   }
 }
 
+
+    
+console.log("Auth page loaded");
+console.log("Current URL:", window.location.href);
+console.log("OAuth code:", new URLSearchParams(window.location.search).get("code"));
+console.log("OAuth error:", new URLSearchParams(window.location.search).get("error"));
+
 completeShopifyLogin();
+
 
 
 loginForm.querySelector('input[type="password"]')
