@@ -1405,6 +1405,7 @@ async function completeShopifyLogin() {
   sessionStorage.setItem("genzmodeShopifyIdToken", data.id_token);
 }
 
+    console.log("Redirecting to homepage after Shopify token exchange");
     window.location.replace("/index.html");
   } catch (err) {
     console.error("Shopify authentication error:", err);
