@@ -1365,7 +1365,6 @@ async function completeShopifyLogin() {
   }
 
   if (!code) return;
-  console.log("Shopify callback code:", code);
 
   const savedState = sessionStorage.getItem("shopify_oauth_state");
   const verifier = sessionStorage.getItem("shopify_pkce_verifier");
@@ -1393,6 +1392,14 @@ async function completeShopifyLogin() {
 
     const data = await response.json();
 
+    console.log("Shopify token response status:", response.status);
+console.log("Shopify token response:", {
+  ok: response.ok,
+  hasAccessToken: Boolean(data.access_token),
+  hasIdToken: Boolean(data.id_token),
+  error: data.error || null
+});
+
     if (!response.ok || !data.access_token) {
       throw new Error(data.error_description || data.error || "Token exchange failed");
     }
@@ -1405,12 +1412,7 @@ async function completeShopifyLogin() {
   sessionStorage.setItem("genzmodeShopifyIdToken", data.id_token);
 }
 
-    console.log("Redirecting to homepage after Shopify token exchange");
-    
-    console.log("GENZMODE LOGIN SUCCESS — access token saved:", 
-  Boolean(sessionStorage.getItem("genzmodeShopifyAccessToken"))
-);
-    
+
     window.location.replace("/index.html");
   } catch (err) {
     console.error("Shopify authentication error:", err);
@@ -1418,15 +1420,7 @@ async function completeShopifyLogin() {
   }
 }
 
-
-    
-console.log("Auth page loaded");
-console.log("Current URL:", window.location.href);
-console.log("OAuth code:", new URLSearchParams(window.location.search).get("code"));
-console.log("OAuth error:", new URLSearchParams(window.location.search).get("error"));
-
 completeShopifyLogin();
-
 
 
 loginForm.querySelector('input[type="password"]')
@@ -1439,10 +1433,7 @@ loginForm.addEventListener("submit", startShopifyLogin);
 signupForm.addEventListener("submit", startShopifyLogin);
 
 
-console.log("Auth page loaded:", window.location.href);
-console.log("Login callback code:", new URLSearchParams(window.location.search).get("code"));
 
-    
     /* =========================================
        FORGOT PASSWORD
     ========================================= */
@@ -1466,6 +1457,4 @@ console.log("Login callback code:", new URLSearchParams(window.location.search).
 
 </body>
 </html>
-
-
 
