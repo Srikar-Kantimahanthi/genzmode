@@ -1406,6 +1406,11 @@ async function completeShopifyLogin() {
 }
 
     console.log("Redirecting to homepage after Shopify token exchange");
+    
+    console.log("GENZMODE LOGIN SUCCESS — access token saved:", 
+  Boolean(sessionStorage.getItem("genzmodeShopifyAccessToken"))
+);
+    
     window.location.replace("/index.html");
   } catch (err) {
     console.error("Shopify authentication error:", err);
