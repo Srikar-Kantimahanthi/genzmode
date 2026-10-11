@@ -4419,10 +4419,12 @@ const GENZMODE_CLIENT_ID =
   "9700ce5b-7ead-43cb-b2ce-2c6b3b6e3694";
 
 const GENZMODE_REDIRECT_URI =
-  "https://genzmode.vercel.app/auth.html";
+  "https://genzmode.vercel.app/index.html";
 
 const GENZMODE_AUTH_URL =
   "https://shopify.com/authentication/101166711065/oauth/authorize";
+const GENZMODE_TOKEN_URL =
+  "https://shopify.com/authentication/101166711065/oauth/token";
 
 async function startGenZModeShopifyLogin(event) {
   event.preventDefault();
@@ -4452,7 +4454,7 @@ async function startGenZModeShopifyLogin(event) {
 
     const state = crypto.randomUUID();
 
-    // Preserve the values for the existing auth.html callback
+    // Preserve the values for the homepage OAuth callback.
     sessionStorage.setItem(
       "shopify_pkce_verifier",
       verifier
@@ -4481,6 +4483,72 @@ async function startGenZModeShopifyLogin(event) {
   } catch (error) {
     console.error("Unable to start Shopify login:", error);
     alert("Unable to start login. Please try again.");
+  }
+}
+
+async function completeGenZModeShopifyLogin() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const returnedState = params.get("state");
+  const error = params.get("error");
+
+  if (error) {
+    alert("Shopify login cancelled or failed. Please try again.");
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return;
+  }
+
+  if (!code) return;
+
+  const savedState = sessionStorage.getItem("shopify_oauth_state");
+  const verifier = sessionStorage.getItem("shopify_pkce_verifier");
+
+  if (!savedState || returnedState !== savedState || !verifier) {
+    alert("Login session expired. Please try again.");
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return;
+  }
+
+  try {
+    const response = await fetch(GENZMODE_TOKEN_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: GENZMODE_CLIENT_ID,
+        redirect_uri: GENZMODE_REDIRECT_URI,
+        code,
+        code_verifier: verifier
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.access_token) {
+      throw new Error(
+        data.error_description || data.error || "Token exchange failed"
+      );
+    }
+
+    sessionStorage.setItem(
+      "genzmodeShopifyAccessToken",
+      data.access_token
+    );
+
+    if (data.id_token) {
+      sessionStorage.setItem("genzmodeShopifyIdToken", data.id_token);
+    }
+
+    sessionStorage.removeItem("shopify_pkce_verifier");
+    sessionStorage.removeItem("shopify_oauth_state");
+    updateAccountUI();
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } catch (error) {
+    console.error("Shopify authentication error:", error);
+    alert("Login could not be completed. Please check the browser console.");
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
 }
 
@@ -4529,3 +4597,4 @@ document.getElementById("myAccountButton")
   });
 
 updateAccountUI();
+completeGenZModeShopifyLogin();
