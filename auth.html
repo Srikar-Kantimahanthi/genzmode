@@ -1365,6 +1365,7 @@ async function completeShopifyLogin() {
   }
 
   if (!code) return;
+  console.log("Shopify callback code:", code);
 
   const savedState = sessionStorage.getItem("shopify_oauth_state");
   const verifier = sessionStorage.getItem("shopify_pkce_verifier");
