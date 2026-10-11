@@ -1425,7 +1425,10 @@ loginForm.addEventListener("submit", startShopifyLogin);
 signupForm.addEventListener("submit", startShopifyLogin);
 
 
+console.log("Auth page loaded:", window.location.href);
+console.log("Login callback code:", new URLSearchParams(window.location.search).get("code"));
 
+    
     /* =========================================
        FORGOT PASSWORD
     ========================================= */
