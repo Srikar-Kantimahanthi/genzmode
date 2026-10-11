@@ -4497,11 +4497,7 @@ function updateAccountUI() {
     "myAccountButton"
   );
 
-  const logoutButton = document.getElementById(
-    "logoutButton"
-  );
-
-  if (!loginButton || !accountButton || !logoutButton) {
+  if (!loginButton || !accountButton) {
     return;
   }
 
@@ -4513,15 +4509,12 @@ function updateAccountUI() {
   accountButton.style.display =
     isLoggedIn ? "inline-block" : "none";
 
-  logoutButton.style.display =
-    isLoggedIn ? "inline-block" : "none";
 }
 
 // Intercept the homepage Login link
 document.getElementById("loginNavButton")
   ?.addEventListener("click", startGenZModeShopifyLogin);
 
-console.log("GENZMODE login handler attached");
 
 /* ========================================
    GENZMODE MY ACCOUNT
@@ -4533,16 +4526,6 @@ const SHOPIFY_CUSTOMER_ACCOUNT_URL =
 document.getElementById("myAccountButton")
   ?.addEventListener("click", function () {
     window.location.href = SHOPIFY_CUSTOMER_ACCOUNT_URL;
-  });
-
-
-  
-// Basic local logout — we'll finish this after login testing
-document.getElementById("logoutButton")
-  ?.addEventListener("click", function () {
-    sessionStorage.removeItem("genzmodeShopifyAccessToken");
-    updateAccountUI();
-    window.location.href = "index.html";
   });
 
 updateAccountUI();
