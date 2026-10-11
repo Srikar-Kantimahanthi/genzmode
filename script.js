@@ -4521,6 +4521,7 @@ function updateAccountUI() {
 document.getElementById("loginNavButton")
   ?.addEventListener("click", startGenZModeShopifyLogin);
 
+console.log("GENZMODE login handler attached");
 
 /* ========================================
    GENZMODE MY ACCOUNT
